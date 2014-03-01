@@ -9,9 +9,12 @@ import org.jsoup.select.Elements;
 import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+
 /**
  * User: liviu
  * Date: 1/15/14
@@ -20,12 +23,17 @@ import java.util.concurrent.TimeUnit;
 public class StackOverflow {
 
     public static void main(String... args) throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
-        // sound();
-        //new Thread(new Tag("java")).start();
-        new Thread(new Tag("jsoup")).start();
-        new Thread(new Tag("spring-batch")).start();
-        new Thread(new Tag("multithreading+java")).start();
-        new Thread(new Tag("thread-safety+java")).start();
+        List<Tag> tags = new ArrayList<>();
+        tags.add(new Tag("jsoup"));
+        tags.add(new Tag("spring-batch"));
+        tags.add(new Tag("multithreading+java"));
+        tags.add(new Tag("thread-safety+java"));
+        while (true) {
+            for (Tag tag : tags) {
+                tag.scan();
+            }
+            Thread.sleep(TimeUnit.SECONDS.toMillis(10));
+        }
     }
 
     private static void sound() throws UnsupportedAudioFileException, IOException, LineUnavailableException, InterruptedException {
@@ -39,7 +47,7 @@ public class StackOverflow {
         }
     }
 
-    public static class Tag implements Runnable {
+    public static class Tag {
 
         public static final String HTTP_STACKOVERFLOW_COM = "http://stackoverflow.com";
         public final String tag;
@@ -64,24 +72,12 @@ public class StackOverflow {
                     if (prev.add(text)) {
                         System.out.println("New Question " + tag);
                         System.out.println(text);
-                        System.out.println(HTTP_STACKOVERFLOW_COM+q.get(0).attr("href"));
+                        System.out.println(HTTP_STACKOVERFLOW_COM + q.get(0).attr("href"));
                         sound();
                     }
                 }
             }
         }
 
-
-        @Override
-        public void run() {
-            while (true) {
-                try {
-                    scan();
-                    Thread.sleep(TimeUnit.SECONDS.toMillis(10));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 }
