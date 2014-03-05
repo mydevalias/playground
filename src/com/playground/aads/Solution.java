@@ -68,15 +68,15 @@ public class Solution {
         }
     }
 
-    public static void main(String... aux) {
-        //int A[] = new int[]{1, 2, 3, 1, 2};
-        //int A[] = new int[]{1, 4, 7, 3, 3, 5};
-        //int A[] = new int[]{5, 5, 5, 5, 5, 5};
-        // int A[] = new int[]{5, 5, 5, 5, 5, 5, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3};
-        //int A[] = new int[]{5, 5, 5, 5, 5, 5, 4, 4, 4, 4, 4, 3};
-        //int A[] = new int[]{1, 2, 3, 4, 5};
-        int A[] = new int[]{1, 3, 10, 7, 7, 9, 5, 8, 4, 2};
-        System.out.println(new Solution().solution(A));
-    }
+//    public static void main(String... aux) {
+//        //int A[] = new int[]{1, 2, 3, 1, 2};
+//        //int A[] = new int[]{1, 4, 7, 3, 3, 5};
+//        //int A[] = new int[]{5, 5, 5, 5, 5, 5};
+//        // int A[] = new int[]{5, 5, 5, 5, 5, 5, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3};
+//        //int A[] = new int[]{5, 5, 5, 5, 5, 5, 4, 4, 4, 4, 4, 3};
+//        //int A[] = new int[]{1, 2, 3, 4, 5};
+//        int A[] = new int[]{1, 3, 10, 7, 7, 9, 5, 8, 4, 2};
+//        System.out.println(new Solution().solution(A));
+//    }
 
 }
