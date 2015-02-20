@@ -2,14 +2,14 @@ package com.playground.aads;
 
 /**
  * User: liviu
- * Date: 3/4/14
- * Time: 9:34 PM
+ * Date: 3/6/14
+ * Time: 10:20 PM
  */
-public class RawQueue<T> {
+public class RawLinkedList<T> {
 
-    Node<T> head, tail;
+    private Node<T> head, tail;
 
-    public void enqueue(T data) {
+    public void add(T data) {
         if (head == null) {
             head = new Node(data);
             tail = head;
@@ -19,7 +19,7 @@ public class RawQueue<T> {
         }
     }
 
-    public T dequeue() {
+    public T removeFirst() {
         if (head != null) {
             T data = head.data;
             head = head.next;
@@ -27,6 +27,19 @@ public class RawQueue<T> {
                 tail = null;
             }
             return data;
+        }
+        return null;
+    }
+
+    public T get(int index) {
+        Node<T> n = head;
+        int i = 0;
+        while (n != null) {
+            if(i == index){
+                return n.data;
+            }
+            i++;
+            n = n.next;
         }
         return null;
     }

@@ -1,15 +1,17 @@
 package com.playground.aads;
 
 /**
+ * just for fun
+ *
  * User: liviu
  * Date: 3/5/14
  * Time: 11:11 PM
  */
-public class RawTableMap<K, V> {
+public class NaiveRawTableMap<K, V> {
 
     private Entry<K, V> table[];
 
-    public RawTableMap() {
+    public NaiveRawTableMap() {
         table = new Entry[15];
     }
 
