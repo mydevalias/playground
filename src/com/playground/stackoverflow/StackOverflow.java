@@ -1,18 +1,14 @@
 package com.playground.stackoverflow;
 
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
+import org.jsoup.nodes.*;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
 import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -23,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class StackOverflow {
 
     public static void main(String... args) throws IOException, UnsupportedAudioFileException, LineUnavailableException, InterruptedException {
+        sound();
         List<Tag> tags = new ArrayList<>();
         tags.add(new Tag("jsoup"));
         tags.add(new Tag("spring-batch"));
@@ -38,7 +35,7 @@ public class StackOverflow {
 
     private static void sound() throws UnsupportedAudioFileException, IOException, LineUnavailableException, InterruptedException {
         for (int i = 0; i < 3; i++) {
-            AudioInputStream audioIn = AudioSystem.getAudioInputStream(new File("D:\\3work\\1java_workspace\\myjutil\\a13-problem.wav"));
+            AudioInputStream audioIn = AudioSystem.getAudioInputStream(new File("a13-problem.wav"));
             Clip clip = AudioSystem.getClip();
             clip.open(audioIn);
             clip.start();
