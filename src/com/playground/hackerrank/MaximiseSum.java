@@ -3,6 +3,7 @@ package com.playground.hackerrank;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.util.TreeSet;
 
 /**
  * ou are given an array of size N and another integer M. Your target is to find the maximum value of sum of subarray modulo M.
@@ -75,39 +76,25 @@ public class MaximiseSum {
         long max = Long.MIN_VALUE;
         long sumArray[] = new long[n];
         long prev = 0;
+        TreeSet<Long> treeSet = new TreeSet<>();
         for (int i = 0; i < n; i++) {
             prev = (arry[i] + prev) % m;
             sumArray[i] = prev;
             max = Math.max(max, prev);
-            for (int j = i - 1; j >= 0; j--) {
-                if (sumArray[j] > sumArray[i]) {
-                    max = Math.max(max, (sumArray[i] - sumArray[j] + m) % m);
-                }
+            treeSet.add(prev);
+
+            Long higher = treeSet.higher(sumArray[i]);
+            if (higher != null) {
+                max = Math.max(max, (sumArray[i] - higher + m) % m);
             }
         }
         hru.output.append(max);
         hru.line();
     }
 
-    private static long max(long[] arry, int n, long m, int startPosition) {
-        long max = Long.MIN_VALUE;
-        long sum = 0;
-        for (int i = startPosition; i < n; i++) {
-            sum += arry[i];
-            long tmpSum = sum;
-            if (sum >= m) {
-                tmpSum = sum % m;
-            }
-            if (max < tmpSum) {
-                max = tmpSum;
-            }
-        }
-        return max;
-    }
-
     public static class HackeRrankUtils {
 
-        File file = new File("inputs/maximisesum/in.txt");
+        File file = new File("inputs/maximisesum/inL.txt");
 
         Scanner scanner = new Scanner(System.in);
 
