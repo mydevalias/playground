@@ -24,11 +24,7 @@ public class MatrixRotation {
             }
         }
 
-        //printMatrix(matrix);
-        //rotate = rotate % (2 * (m + n - 2));
-        //for (int i = 0; i < rotate; i++) {
         rotate(matrix, rotate);
-        //}
         printMatrix(matrix);
 
     }
