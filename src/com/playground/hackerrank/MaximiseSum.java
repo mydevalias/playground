@@ -73,13 +73,16 @@ public class MaximiseSum {
 
     private static void solve(long[] arry, long m, HackeRrankUtils hru, int n) {
         long max = Long.MIN_VALUE;
-        for (int i = 0; i < n; i++) {//start position
-            long tmpMax = max(arry, n, m, i);
-            if (max < tmpMax) {
-                max = tmpMax;
-            }
-            if (max == m - 1) {
-                break;
+        long sumArray[] = new long[n];
+        long prev = 0;
+        for (int i = 0; i < n; i++) {
+            prev = (arry[i] + prev) % m;
+            sumArray[i] = prev;
+            max = Math.max(max, prev);
+            for (int j = i - 1; j >= 0; j--) {
+                if (sumArray[j] > sumArray[i]) {
+                    max = Math.max(max, (sumArray[i] - sumArray[j] + m) % m);
+                }
             }
         }
         hru.output.append(max);
@@ -104,7 +107,7 @@ public class MaximiseSum {
 
     public static class HackeRrankUtils {
 
-        File file = new File("inputs/maximisesum/inL.txt");
+        File file = new File("inputs/maximisesum/in.txt");
 
         Scanner scanner = new Scanner(System.in);
 
