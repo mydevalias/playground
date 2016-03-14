@@ -24,8 +24,6 @@ public class Contacts {
                 }
             }
         }
-//        trie.addWord("s");
-//        hru.output.append(trie.getWords("s"));
         hru.printBuilder();
     }
 
@@ -100,7 +98,6 @@ public class Contacts {
             }
         }
     }
-
 
     public static class HackeRrankUtils {
 
