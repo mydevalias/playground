@@ -23,8 +23,6 @@ public class CoinJam {
             solve(n, j);
 
         }
-        //  test("100011");
-
     }
 
     private static void solve(int n, int f) {
@@ -35,13 +33,11 @@ public class CoinJam {
         sb.append('1');
 
         String start = sb.toString();
-        //System.out.println(start);
         long value = Long.parseLong(start, 2);
         int ff = 0;
         while (ff < f) {
             String current = Long.toString(value, 2);
             if (current.charAt(current.length() - 1) == '1') {
-                //System.out.println(current);
                 if (test(current)) {
                     ff++;
                 }
@@ -54,8 +50,7 @@ public class CoinJam {
     private static boolean test(String input) {
         StringBuilder sb = new StringBuilder();
         for (int i = 2; i <= 10; i++) {
-            long value = Long.parseLong(input, i);
-            //System.out.println(value);
+            BigInteger value = new BigInteger(input, i);
             if (isPrime(value, sb)) {
                 return false;
             }
@@ -65,19 +60,29 @@ public class CoinJam {
         return true;
     }
 
-    static boolean isPrime(long n, StringBuilder sb) {
-        if (n % 2 == 0) {
+    static boolean isPrime(BigInteger n, StringBuilder sb) {
+        long timeout = System.currentTimeMillis();
+        int k = 0;
+        BigInteger two = new BigInteger("2");
+        if (!two.equals(n) && BigInteger.ZERO.equals(n.mod(two))) {
             sb.append(" ").append("2");
             return false;
         }
-        for (long i = 3; i * i <= n; i += 2) {
-            if (n % i == 0) {
-                sb.append(" ").append(i);
+
+        for (BigInteger i = new BigInteger("3"); i.multiply(i).compareTo(n) < 1; i = i.add(two)) {
+            if (BigInteger.ZERO.equals(n.mod(i))) {
+                sb.append(" ").append(i.toString());
                 return false;
             }
+            k++;
+            if (k % 10000 == 0) {
+                if (System.currentTimeMillis() - timeout > 1000) {
+                    return true; //aka fi
+                }
+            }
         }
-
         return true;
+
     }
 
     public static String bsString(BitSet bs) {
