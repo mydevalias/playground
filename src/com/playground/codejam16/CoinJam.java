@@ -12,12 +12,9 @@ import java.util.Scanner;
  * Time: 7:23 PM
  */
 public class CoinJam {
-    private static BigInteger two = new BigInteger("2");
-    private static BigInteger three = new BigInteger("3");
 
     public static void main(String... args) throws FileNotFoundException {
         HackeRrankUtils hru = new HackeRrankUtils();
-        //  test("10000000000000000000000000000001");
         long t = hru.scanner.nextLong();
         for (int tt = 0; tt < t; tt++) {
             System.out.println("Case #" + (tt + 1) + ": ");
@@ -57,7 +54,7 @@ public class CoinJam {
     private static boolean test(String input) {
         StringBuilder sb = new StringBuilder();
         for (int i = 2; i <= 10; i++) {
-            BigInteger value = new BigInteger(input, i);
+            long value = Long.parseLong(input, i);
             //System.out.println(value);
             if (isPrime(value, sb)) {
                 return false;
@@ -68,37 +65,19 @@ public class CoinJam {
         return true;
     }
 
-    static boolean isPrime(BigInteger n, StringBuilder sb) {
-        long timeout = System.currentTimeMillis();
-        int k = 0;
-        BigInteger two = new BigInteger("2");
-        if (!two.equals(n) && BigInteger.ZERO.equals(n.mod(two))) {
+    static boolean isPrime(long n, StringBuilder sb) {
+        if (n % 2 == 0) {
             sb.append(" ").append("2");
             return false;
         }
-
-        for (BigInteger i = new BigInteger("3"); i.multiply(i).compareTo(n) < 1; i = i.add(two)) {
-            if (BigInteger.ZERO.equals(n.mod(i))) {
-                sb.append(" ").append(i.toString());
+        for (long i = 3; i * i <= n; i += 2) {
+            if (n % i == 0) {
+                sb.append(" ").append(i);
                 return false;
             }
-            k++;
-            if (k % 10000 == 0) {
-                if (System.currentTimeMillis() - timeout > 1000) {
-                    return true; //aka fi
-                }
-            }
         }
+
         return true;
-
-    }
-
-    private static BigInteger appxRoot(final BigInteger n) {
-        BigInteger half = n.shiftRight(1);
-        while (half.multiply(half).compareTo(n) > 0) {
-            half = half.shiftRight(1);
-        }
-        return half.shiftLeft(1);
     }
 
     public static String bsString(BitSet bs) {
