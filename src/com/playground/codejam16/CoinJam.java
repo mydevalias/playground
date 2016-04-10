@@ -85,19 +85,6 @@ public class CoinJam {
 
     }
 
-    public static String bsString(BitSet bs) {
-        StringBuilder reply = new StringBuilder();
-        for (int x = 0; x < bs.length(); x++) {
-            if (bs.get(x)) {
-                reply.append('1');
-            } else {
-                reply.append('0');
-            }
-        }
-        return reply.toString();
-
-    }
-
     public static class HackeRrankUtils {
 
         File file = new File("inputs/g/in3.txt");
