@@ -7,11 +7,9 @@ import java.util.BitSet;
 import java.util.Scanner;
 
 /**
- * Created with IntelliJ IDEA.
  * User: liviu
  * Date: 4/9/16
  * Time: 6:41 PM
- * To change this template use File | Settings | File Templates.
  */
 public class RevengeOfThePancakes {
 
@@ -27,7 +25,6 @@ public class RevengeOfThePancakes {
     }
 
     private static void solve(String in) {
-        //System.out.println(in);
         BitSet bs = new BitSet(in.length());
         for (int i = 0; i < in.length(); i++) {
             if ('+' == in.charAt(i)) {
@@ -36,7 +33,6 @@ public class RevengeOfThePancakes {
         }
 
         int k = 0;
-      //  System.out.println(bs);
         for (int pos = in.length(); pos >= 0; pos--) {
             if (bs.cardinality() == in.length()) {
                 System.out.println(k);
@@ -45,12 +41,9 @@ public class RevengeOfThePancakes {
             if (!bs.get(pos-1)) {
                 k++;
                 bs.flip(0, pos);
-          //      System.out.println(bs);
             }
         }
         System.out.println(k);
-
-
     }
 
 

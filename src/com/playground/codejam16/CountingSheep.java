@@ -16,13 +16,11 @@ public class CountingSheep {
     public static void main(String... args) throws FileNotFoundException {
         HackeRrankUtils hru = new HackeRrankUtils();
         long t = hru.scanner.nextLong();
-       // solve(1692);
         for (int tt = 0; tt < t; tt++) {
             long l = hru.scanner.nextLong();
             System.out.print("Case #" + (tt + 1) + ": ");
             solve(l);
         }
-
     }
 
     private static void solve(long l) {
@@ -41,18 +39,15 @@ public class CountingSheep {
             BigInteger nbi = bi.multiply(BigInteger.valueOf(k));
             String digits = nbi.toString();
             for (int i = 0; i < digits.length(); i++) {
-                int digit = (int) (digits.charAt(i) - '0');
+                int digit = (digits.charAt(i) - '0');
                 bs.set(digit);
-                //System.out.println(bs);
                 if (bs.cardinality() == 10) {
                     System.out.println(digits);
                     return;
                 }
             }
         }
-
     }
-
 
     public static class HackeRrankUtils {
 
