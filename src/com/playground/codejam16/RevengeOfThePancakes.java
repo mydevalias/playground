@@ -2,7 +2,6 @@ package com.playground.codejam16;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.math.BigInteger;
 import java.util.BitSet;
 import java.util.Scanner;
 
