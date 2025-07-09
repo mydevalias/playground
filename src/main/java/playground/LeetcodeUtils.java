@@ -1,5 +1,8 @@
 package playground;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * I keep needing some methods while practicing on LeetCode.
  */
@@ -16,5 +19,40 @@ public class LeetcodeUtils {
         return counter;
     }
 
+    public static class BooleanSparseMatrix{
+        private final int rows;
+        private final int cols;
+        private final Map<Integer, Boolean>[] data;
 
+        @SuppressWarnings("unchecked")
+        public BooleanSparseMatrix(int rows, int cols) {
+            this.rows = rows;
+            this.cols = cols;
+            this.data = new Map[rows];
+        }
+
+        public void set(int row, int col, Boolean value) {
+            if (row < 0 || row >= rows || col < 0 || col >= cols) {
+                throw new IndexOutOfBoundsException("Index out of bounds");
+            }
+
+            if (value == null) {
+                if (data[row] != null) {
+                    data[row].remove(col);
+                }
+            } else {
+                if (data[row] == null) {
+                    data[row] = new HashMap<>();
+                }
+                data[row].put(col, value);
+            }
+        }
+
+        public Boolean get(int row, int col) {
+            if (row < 0 || row >= rows || col < 0 || col >= cols) {
+                throw new IndexOutOfBoundsException("Index out of bounds");
+            }
+            return data[row] == null ? null : data[row].get(col);
+        }
+    }
 }
