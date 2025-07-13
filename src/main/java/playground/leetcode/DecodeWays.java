@@ -1,7 +1,7 @@
 package playground.leetcode;
 
 /**
- * https://leetcode.com/problems/decode-ways/submissions/1696586157/
+ * https://leetcode.com/problems/word-break/description/
  */
 public class DecodeWays {
 
