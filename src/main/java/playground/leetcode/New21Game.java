@@ -13,10 +13,30 @@ public class New21Game {
     double[] memo;
 
     public double new21Game(int n, int k, int maxPts) {
+        double[] memo = new double[n + 1];
+        memo[0] = 1;
+        double s = k > 0 ? 1 : 0;
+        for (int i = 1; i <= n; i++) {
+            memo[i] = s / maxPts;
+            if (i < k) {
+                s += memo[i];
+            }
+            if (i - maxPts >= 0 && i - maxPts < k) {
+                s -= memo[i - maxPts];
+            }
+        }
+        double ans = 0;
+        for (int i = k; i <= n; i++) {
+            ans += memo[i];
+        }
+        return ans;
+    }
+
+    private double slow(int n, int k, int maxPts) {
         this.n = n;
         this.k = k;
         this.maxPts = maxPts;
-        memo =  new double[n + maxPts + 1];
+        memo = new double[n + maxPts + 1];
         Arrays.fill(memo, -1.0);
         return bk(0);
     }
