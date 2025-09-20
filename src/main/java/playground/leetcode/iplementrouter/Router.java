@@ -1,16 +1,19 @@
 package playground.leetcode.iplementrouter;
 
-import java.util.TreeSet;
+import java.util.*;
 
 public class Router {
 
+    private static long sequenceCounter = 0;
     final int memoryLimit;
 
     final TreeSet<Packet> packets;
+    final Map<Integer, TreeSet<Integer>> destData;
 
     public Router(int memoryLimit) {
         this.memoryLimit = memoryLimit;
         this.packets = new TreeSet<>();
+        this.destData = new HashMap<>();
     }
 
     public boolean addPacket(int source, int destination, int timestamp) {
@@ -21,7 +24,8 @@ public class Router {
         }
 
         if (packets.size() >= memoryLimit) {
-            packets.pollFirst();
+            var r = getPacket();
+            packets.remove(r);
         }
 
         return packets.add(p);
@@ -31,8 +35,28 @@ public class Router {
         if (packets.isEmpty()) {
             return new int[0];
         }
-        var p = packets.pollFirst();
+        var p = getPacket();
         return new int[]{p.source, p.destination, p.timestamp};
+    }
+
+    private Packet getPacket() {
+        var p = packets.pollFirst();
+        if (!packets.isEmpty() && p.timestamp == packets.first().timestamp) {
+            Set<Packet> toAdd = new HashSet<>();
+            Packet ret = p;
+            toAdd.add(p);
+            while (!packets.isEmpty() && p.timestamp == packets.first().timestamp) {
+                p = packets.pollFirst();
+                toAdd.add(p);
+                if (ret.sequence > p.sequence) {
+                    ret = p;
+                }
+            }
+            toAdd.remove(ret);
+            p = ret;
+            packets.addAll(toAdd);
+        }
+        return p;
     }
 
     public int getCount(int destination, int startTime, int endTime) {
@@ -41,7 +65,10 @@ public class Router {
             if (destination != value.destination) {
                 continue;
             }
-            if (value.timestamp >= startTime && value.timestamp <= endTime) {
+            if (value.timestamp > endTime) {
+                break;
+            }
+            if (value.timestamp >= startTime) {
                 c++;
             }
         }
@@ -50,15 +77,17 @@ public class Router {
 
 
     static class Packet implements Comparable<Packet> {
-        private int source;
-        private int destination;
-        private int timestamp;
+        private final int source;
+        private final int destination;
+        private final int timestamp;
+        private final long sequence;
 
         // Constructor
         public Packet(int source, int destination, int timestamp) {
             this.source = source;
             this.destination = destination;
             this.timestamp = timestamp;
+            this.sequence = sequenceCounter++;
         }
 
 
