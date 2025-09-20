@@ -8,7 +8,7 @@ public class Router {
     final int memoryLimit;
 
     final TreeSet<Packet> packets;
-    final Map<Integer, TreeSet<Integer>> destData;
+    final Map<Integer, TreeMap<Integer, Integer>> destData; // destination -> (timestamp -> count)
 
     public Router(int memoryLimit) {
         this.memoryLimit = memoryLimit;
@@ -26,9 +26,15 @@ public class Router {
         if (packets.size() >= memoryLimit) {
             var r = getPacket();
             packets.remove(r);
+            removeFromDestData(r.destination, r.timestamp);
         }
 
-        return packets.add(p);
+        boolean added = packets.add(p);
+        if (added) {
+            destData.computeIfAbsent(destination, k -> new TreeMap<>())
+                    .merge(timestamp, 1, Integer::sum);
+        }
+        return added;
     }
 
     public int[] forwardPacket() {
@@ -36,6 +42,7 @@ public class Router {
             return new int[0];
         }
         var p = getPacket();
+        removeFromDestData(p.destination, p.timestamp);
         return new int[]{p.source, p.destination, p.timestamp};
     }
 
@@ -59,20 +66,34 @@ public class Router {
         return p;
     }
 
-    public int getCount(int destination, int startTime, int endTime) {
-        int c = 0;
-        for (Packet value : packets) {
-            if (destination != value.destination) {
-                continue;
-            }
-            if (value.timestamp > endTime) {
-                break;
-            }
-            if (value.timestamp >= startTime) {
-                c++;
+    private void removeFromDestData(int destination, int timestamp) {
+        TreeMap<Integer, Integer> destMap = destData.get(destination);
+        if (destMap != null) {
+            Integer count = destMap.get(timestamp);
+            if (count != null) {
+                if (count == 1) {
+                    destMap.remove(timestamp);
+                    if (destMap.isEmpty()) {
+                        destData.remove(destination);
+                    }
+                } else {
+                    destMap.put(timestamp, count - 1);
+                }
             }
         }
-        return c;
+    }
+
+    public int getCount(int destination, int startTime, int endTime) {
+        TreeMap<Integer, Integer> timestampCounts = destData.get(destination);
+        if (timestampCounts == null || timestampCounts.isEmpty()) {
+            return 0;
+        }
+
+        int count = 0;
+        for (Integer packetCount : timestampCounts.subMap(startTime, true, endTime, true).values()) {
+            count += packetCount;
+        }
+        return count;
     }
 
 
@@ -91,21 +112,19 @@ public class Router {
         }
 
 
-        // Comparable implementation - primary sort by timestamp, then source, then destination
         @Override
         public int compareTo(Packet other) {
-            int timestampComparison = Integer.compare(this.timestamp, other.timestamp);
-            if (timestampComparison != 0) {
-                return timestampComparison;
+            if (this.timestamp != other.timestamp) {
+                return this.timestamp - other.timestamp;
             }
 
-            int sourceComparison = Integer.compare(this.source, other.source);
-            if (sourceComparison != 0) {
-                return sourceComparison;
+            if (this.source != other.source) {
+                return this.source - other.source;
             }
 
-            return Integer.compare(this.destination, other.destination);
+            return this.destination - other.destination;
         }
+
 
         @Override
         public boolean equals(Object obj) {
