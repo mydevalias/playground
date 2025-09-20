@@ -1,56 +1,44 @@
 package playground.leetcode;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class FoodRatings {
-    private Map<String, Holder> foodToHoler;
-    private Map<String, PriorityQueue<Holder>> cuisinesToPQ;
+    private Map<String, Holder> foodToHolder;
+    private Map<String, TreeSet<Holder>> cuisinesToSet;
 
     public FoodRatings(String[] foods, String[] cuisines, int[] ratings) {
-        foodToHoler = new HashMap<>();
-        cuisinesToPQ = new HashMap<>();
+        foodToHolder = new HashMap<>();
+        cuisinesToSet = new HashMap<>();
         for (int i = 0; i < foods.length; i++) {
-            Holder h = new Holder();
-            h.food = foods[i];
-            h.rating = ratings[i];
-            h.cuisine = cuisines[i];
-            foodToHoler.put(h.food, h);
-            String cuisine = h.cuisine;
-            PriorityQueue<Holder> pq = getHolders(cuisine);
-            pq.add(h);
+            Holder h = new Holder(foods[i], ratings[i], cuisines[i]);
+            foodToHolder.put(foods[i], h);
+            cuisinesToSet.computeIfAbsent(cuisines[i], k -> new TreeSet<>()).add(h);
         }
-    }
-
-    private PriorityQueue<Holder> getHolders(String cuisine) {
-        PriorityQueue<Holder> pq = cuisinesToPQ.get(cuisine);
-        if (pq == null) {
-            pq = new PriorityQueue<>();
-            cuisinesToPQ.put(cuisine, pq);
-        }
-        return pq;
     }
 
     public void changeRating(String food, int newRating) {
-        Holder h = foodToHoler.get(food);
-        String cuisine = h.cuisine;
-        PriorityQueue<Holder> pq = getHolders(cuisine);
-        pq.remove(h);
+        Holder h = foodToHolder.get(food);
+        TreeSet<Holder> set = cuisinesToSet.get(h.cuisine);
+        set.remove(h);
         h.rating = newRating;
-        pq.add(h);
-
+        set.add(h);
     }
 
     public String highestRated(String cuisine) {
-        return cuisinesToPQ.get(cuisine).peek().food;
+        return cuisinesToSet.get(cuisine).first().food;
     }
+
 
     static class Holder implements Comparable<Holder> {
         private String food;
         private int rating;
         private String cuisine;
+
+        public Holder(String food, int rating, String cuisine) {
+            this.food = food;
+            this.rating = rating;
+            this.cuisine = cuisine;
+        }
 
         @Override
         public int compareTo(Holder other) {
