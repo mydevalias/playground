@@ -8,7 +8,7 @@ public class Router {
     final int memoryLimit;
 
     final TreeSet<Packet> packets;
-    final Map<Integer, TreeMap<Integer, Integer>> destData; // destination -> (timestamp -> count)
+    final Map<Integer, TreeMap<Integer, Integer>> destData;
 
     public Router(int memoryLimit) {
         this.memoryLimit = memoryLimit;
@@ -24,9 +24,7 @@ public class Router {
         }
 
         if (packets.size() >= memoryLimit) {
-            var r = getPacket();
-            packets.remove(r);
-            removeFromDestData(r.destination, r.timestamp);
+            forwardPacket();
         }
 
         boolean added = packets.add(p);
@@ -41,12 +39,12 @@ public class Router {
         if (packets.isEmpty()) {
             return new int[0];
         }
-        var p = getPacket();
+        var p = findNext();
         removeFromDestData(p.destination, p.timestamp);
         return new int[]{p.source, p.destination, p.timestamp};
     }
 
-    private Packet getPacket() {
+    private Packet findNext() {
         var p = packets.pollFirst();
         if (!packets.isEmpty() && p.timestamp == packets.first().timestamp) {
             Set<Packet> toAdd = new HashSet<>();
