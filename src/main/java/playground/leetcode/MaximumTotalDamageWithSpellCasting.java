@@ -38,7 +38,6 @@ public class MaximumTotalDamageWithSpellCasting {
             result = Math.max(without, with);
         }
 
-        memo.put(current, result);
         return result;
     }
 
