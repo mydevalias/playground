@@ -7,10 +7,12 @@ public class MaximumTotalDamageWithSpellCasting {
 
     int[] power;
     SimpleMultiCounter smc;
+    Map<String, Long> memo; // Add memoization map
 
     public long maximumTotalDamage(int[] power) {
         this.power = power;
         smc = new SimpleMultiCounter();
+        memo = new HashMap<>(); // Initialize memo
         return maximumTotalDamage(0);
     }
 
@@ -18,11 +20,12 @@ public class MaximumTotalDamageWithSpellCasting {
         if (current == power.length) {
             return 0;
         }
+
+        long result;
         if (smc.get(power[current]) > 0) {
             smc.increment(power[current]);
-            long l = power[current] + maximumTotalDamage(current + 1);
+            result = power[current] + maximumTotalDamage(current + 1);
             smc.decrement(power[current]);
-            return l;
         } else {
             long with = 0;
             if (smc.get(power[current] + 1) == 0 && smc.get(power[current] + 2) == 0
@@ -32,8 +35,11 @@ public class MaximumTotalDamageWithSpellCasting {
                 smc.decrement(power[current]);
             }
             long without = maximumTotalDamage(current + 1);
-            return Math.max(without, with);
+            result = Math.max(without, with);
         }
+
+        memo.put(current, result);
+        return result;
     }
 
     public class SimpleMultiCounter {
@@ -50,5 +56,6 @@ public class MaximumTotalDamageWithSpellCasting {
         public int get(int key) {
             return counters.getOrDefault(key, 0);
         }
+
     }
 }
