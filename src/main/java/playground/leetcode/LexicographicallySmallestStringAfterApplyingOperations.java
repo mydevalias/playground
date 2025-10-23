@@ -1,85 +1,52 @@
 package playground.leetcode;
 
-import java.util.Arrays;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 public class LexicographicallySmallestStringAfterApplyingOperations {
 
-    private int gcd(int a, int b) {
-        while (b != 0) {
-            int temp = b;
-            b = a % b;
-            a = temp;
-        }
-        return a;
-    }
-
     public String findLexSmallestString(String s, int a, int b) {
-        int values[] = new int[s.length()];
-        for (int i = 0; i < s.length(); i++) {
-            values[i] = s.charAt(i) - '0';
-        }
+        Set<String> visited = new HashSet<>();
+        Queue<String> queue = new LinkedList<>();
+        String smallest = s;
 
-        TreeSet<String> sorted = new TreeSet<>();
-        for (int k = 0; k < s.length() / gcd(s.length(), b); k++) {
-            int[] copy = Arrays.copyOf(values, values.length);
-            sorted.addAll(compute(copy, a));
-            rotate(values, b);
-        }
+        queue.offer(s);
+        visited.add(s);
 
-        return sorted.first();
-    }
+        while (!queue.isEmpty()) {
+            String current = queue.poll();
 
-    public TreeSet<String> compute(int values[], int a) {
-
-        TreeSet<String> sorted = new TreeSet<>();
-        while (true) {
-            if (!sorted.add(tos(values))) {
-                break;
+            if (current.compareTo(smallest) < 0) {
+                smallest = current;
             }
-            for (int i = 0; i < values.length; i++) {
-                if (i % 2 == 1) {
-                    values[i] = (values[i] + a) % 10;
-                }
+
+            String added = addToOdd(current, a);
+            if (!visited.contains(added)) {
+                visited.add(added);
+                queue.offer(added);
+            }
+
+            String rotated = rotate(current, b);
+            if (!visited.contains(rotated)) {
+                visited.add(rotated);
+                queue.offer(rotated);
             }
         }
 
-        return sorted;
+        return smallest;
     }
 
-    private String tos(int[] values) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < values.length; i++) {
-            sb.append(values[i]);
+    private String addToOdd(String s, int a) {
+        char[] chars = s.toCharArray();
+        for (int i = 1; i < chars.length; i += 2) {
+            int digit = (chars[i] - '0' + a) % 10;
+            chars[i] = (char) ('0' + digit);
         }
-        return sb.toString();
+        return new String(chars);
     }
 
-
-    private void rotate(int[] values, int a) {
-        int n = values.length;
-        a = a % n;
-
-        if (a == 0) return;
-
-        int[] temp = new int[a];
-
-        for (int i = 0; i < a; i++) {
-            temp[i] = values[n - a + i];
-        }
-
-        for (int i = n - 1; i >= a; i--) {
-            values[i] = values[i - a];
-        }
-
-        for (int i = 0; i < a; i++) {
-            values[i] = temp[i];
-        }
-    }
-
-
-    public static void main(String[] args) {
-        new LexicographicallySmallestStringAfterApplyingOperations().findLexSmallestString("123", 1, 1);
+    private String rotate(String s, int b) {
+        int n = s.length();
+        b = b % n;
+        return s.substring(n - b) + s.substring(0, n - b);
     }
 }
