@@ -21,7 +21,7 @@ public class TrionicArrayII {
                 i++;
             }
             int r = i - 1;
-            if (q == p || r == q) {  // Fixed condition
+            if (q == p || r == q || p == l ) {
                 mm = q + 1;
                 continue;
             }
@@ -33,23 +33,23 @@ public class TrionicArrayII {
 
     private long findMax(int[] nums, int l, int p, int q, int r) {
         long res = 0;
-        //first
-        long maxSum = 0;
-        long sum = 0;
-        for (int i = p - 1; i >= l; i--) {
-            sum += nums[i];
-            maxSum = Math.max(maxSum, sum);
-        }
-        res += maxSum;
-        //second
+
         for (int i = p; i <= q; i++) {
             res += nums[i];
         }
-        //third
-        maxSum = 0;
-        sum = 0;
-        for (int i = q + 1; i <= r; i++) {
-            sum += nums[i];
+
+        long maxSum = nums[p - 1];  // Must include this
+        long sum = nums[p - 1];
+        for (int k = p - 2; k >= l; k--) {
+            sum += nums[k];
+            maxSum = Math.max(maxSum, sum);
+        }
+        res += maxSum;
+
+        maxSum = nums[q + 1];  // Must include this
+        sum = nums[q + 1];
+        for (int k = q + 2; k <= r; k++) {
+            sum += nums[k];
             maxSum = Math.max(maxSum, sum);
         }
         res += maxSum;
