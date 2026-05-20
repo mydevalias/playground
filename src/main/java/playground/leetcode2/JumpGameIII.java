@@ -28,7 +28,6 @@ public class JumpGameIII {
 
         }
         return false;
-
     }
 
     private static boolean found(int[] arr, int next, BitSet visited, Queue<Integer> stack) {
