@@ -6,50 +6,42 @@ import java.util.HashSet;
 public class MinimumScoreofaPathBetweenTwoCities {
 
     public int minScore(int n, int[][] roads) {
-        HashMap<Integer, Cities> all = new HashMap<>();
+        int[] parent = new int[n + 1];
+        int[] min = new int[n + 1];
+
+        for (int i = 1; i <= n; i++) {
+            parent[i] = i;
+            min[i] = Integer.MAX_VALUE;
+        }
 
         for (int road[] : roads) {
             int f = road[0];
             int t = road[1];
             int d = road[2];
 
-            Cities ff = city(all, f, d, t);
-            Cities tt = city(all, t, d, f);
-
-            if (ff != tt) {
-                merge(all, ff, tt);
-            } else {
-                ff.min = Math.min(ff.min, d);
-            }
+            union(parent, min, f, t, d);
         }
 
-        return all.get(1).min;
+        int root = find(parent, 1);
+        return min[root];
     }
 
-    private void merge(HashMap<Integer, Cities> all, Cities ff, Cities tt) {
-        ff.cities.addAll(tt.cities);
-        ff.min = Math.min(ff.min, tt.min);
+    private void union(int[] parent, int[] min, int f, int t, int d) {
+        int rf = find(parent, f);
+        int rt = find(parent, t);
 
-        for (int city : tt.cities) {
-            all.put(city, ff);
+        if (rf != rt) {
+            parent[rf] = rt;
+            min[rt] = Math.min(min[rt], min[rf]);
         }
+
+        min[find(parent, f)] = Math.min(min[find(parent, f)], d);
     }
 
-    private Cities city(HashMap<Integer, Cities> all, int f, int d, int t) {
-        Cities ff = all.get(f);
-        if (ff == null) {
-            ff = new Cities();
-            ff.min = d;
-            ff.cities.add(f);
-            all.put(f, ff);
-        } else {
-            ff.min = Math.min(ff.min, d);
+    private int find(int[] parent, int x) {
+        if (parent[x] != x) {
+            parent[x] = find(parent, parent[x]);
         }
-        return ff;
-    }
-
-    static class Cities {
-        HashSet<Integer> cities = new HashSet<>();
-        int min = Integer.MAX_VALUE;
+        return parent[x];
     }
 }
