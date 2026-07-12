@@ -16,20 +16,35 @@ public class CountTheNumberOfCompleteComponents {
             to.set(e[0]);
         }
 
-
         connected = new int[n];
         Arrays.fill(connected, -1);
         for (int i = 0; i < n; i++) {
             dfs(i, i);
         }
 
-        Set<Integer> connectedSet = new HashSet<>();
-        for (int value : connected) {
-            connectedSet.add(value);
+        return count(edges);
+    }
+
+    private int count(int[][] edges) {
+        Map<Integer, Integer> nodeCount = new HashMap<>();
+        Map<Integer, Integer> edgeCount = new HashMap<>();
+        for (int v : connected) {
+            nodeCount.merge(v, 1, Integer::sum);
+        }
+        for (int[] e : edges) {
+            int id = connected[e[0]];
+            edgeCount.merge(id, 1, Integer::sum);
         }
 
-        return connectedSet.size();
-
+        int result = 0;
+        for (int id : nodeCount.keySet()) {
+            long k = nodeCount.get(id);
+            long need = k * (k - 1) / 2;
+            if (edgeCount.getOrDefault(id, 0) == need) {
+                result++;
+            }
+        }
+        return result;
     }
 
     private void dfs(int pos, int id) {
