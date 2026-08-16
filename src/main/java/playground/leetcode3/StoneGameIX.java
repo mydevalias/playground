@@ -1,15 +1,25 @@
 package playground.leetcode3;
 
+import java.util.Map;
+
 public class StoneGameIX {
 
 
-    private int[] cnt;
-    private Boolean[][][][][] memo;
+    private Map<Long, Boolean> memo;
 
     public boolean stoneGameIX(int[] stones) {
-        cnt = counts(stones);
-        memo = new Boolean[2][3][cnt[0] + 1][cnt[1] + 1][cnt[2] + 1];
+        int[] cnt = counts(stones);
+        memo = new java.util.HashMap<>();
         return bk(true, 0, cnt[0], cnt[1], cnt[2]);
+    }
+
+    private long key(boolean aliceTurn, int sumMod, int c0, int c1, int c2) {
+        long k = aliceTurn ? 1 : 0;
+        k = k * 3 + sumMod;
+        k = k * 100000 + c0;
+        k = k * 100000 + c1;
+        k = k * 100000 + c2;
+        return k;
     }
 
     private boolean bk(boolean aliceTurn, int sumMod, int c0, int c1, int c2) {
@@ -17,9 +27,10 @@ public class StoneGameIX {
             return false;
         }
 
-        int t = aliceTurn ? 1 : 0;
-        if (memo[t][sumMod][c0][c1][c2] != null) {
-            return memo[t][sumMod][c0][c1][c2];
+        long k = key(aliceTurn, sumMod, c0, c1, c2);
+        Boolean cached = memo.get(k);
+        if (cached != null) {
+            return cached;
         }
 
         boolean result;
@@ -55,7 +66,7 @@ public class StoneGameIX {
             result = r0 && r1 && r2;
         }
 
-        memo[t][sumMod][c0][c1][c2] = result;
+        memo.put(k, result);
         return result;
     }
 
