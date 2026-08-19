@@ -1,8 +1,29 @@
 package playground.leetcode3;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class CinemaSeatAllocation {
+     static final Set<Integer> TWO_GROUPS = new HashSet<>();
+     static final Set<Integer> ONE_GROUP = new HashSet<>();
+
+    static {
+        int leftMask = (1 << 2) | (1 << 3) | (1 << 4) | (1 << 5);
+        int midMask = (1 << 4) | (1 << 5) | (1 << 6) | (1 << 7);
+        int rightMask = (1 << 6) | (1 << 7) | (1 << 8) | (1 << 9);
+        for (int mask = 0; mask < 2048; mask++) {
+            boolean left = (mask & leftMask) == 0;
+            boolean mid = (mask & midMask) == 0;
+            boolean right = (mask & rightMask) == 0;
+            if (left && right) {
+                TWO_GROUPS.add(mask);
+            } else if (left || mid || right) {
+                ONE_GROUP.add(mask);
+            }
+        }
+    }
+
     public int maxNumberOfFamilies(int n, int[][] reservedSeats) {
         Arrays.sort(reservedSeats, (a, b) -> {
             if (a[0] != b[0]) {
@@ -13,17 +34,14 @@ public class CinemaSeatAllocation {
         int res = 0;
         int index = 0;
         for (int i = 1; i <= n; i++) {
-            boolean[] reserved = new boolean[11];
+            int mask = 0;
             while (index < reservedSeats.length && reservedSeats[index][0] == i) {
-                reserved[reservedSeats[index][1]] = true;
+                mask |= 1 << reservedSeats[index][1];
                 index++;
             }
-            boolean left = !reserved[2] && !reserved[3] && !reserved[4] && !reserved[5];
-            boolean mid = !reserved[4] && !reserved[5] && !reserved[6] && !reserved[7];
-            boolean right = !reserved[6] && !reserved[7] && !reserved[8] && !reserved[9];
-            if (left && right) {
+            if (TWO_GROUPS.contains(mask)) {
                 res += 2;
-            } else if (left || mid || right) {
+            } else if (ONE_GROUP.contains(mask)) {
                 res += 1;
             }
         }
