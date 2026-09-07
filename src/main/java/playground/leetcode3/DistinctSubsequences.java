@@ -4,10 +4,12 @@ public class DistinctSubsequences {
 
     String s;
     String t;
+    Integer[][] memo;
 
     public int numDistinct(String s, String t) {
         this.s = s;
         this.t = t;
+        this.memo = new Integer[s.length() + 1][t.length() + 1];
         return bk(0, 0);
     }
 
@@ -18,12 +20,16 @@ public class DistinctSubsequences {
         if (sindex == s.length()) {
             return 0;
         }
-        int ret = 0;
-        if(s.charAt(sindex) == t.charAt(tindex)){
-            ret +=bk(sindex+1, tindex+1);
+        if (memo[sindex][tindex] != null) {
+            return memo[sindex][tindex];
         }
-        ret +=bk(sindex+1, tindex);
+        int ret = 0;
+        if (s.charAt(sindex) == t.charAt(tindex)) {
+            ret += bk(sindex + 1, tindex + 1);
+        }
+        ret += bk(sindex + 1, tindex);
 
+        memo[sindex][tindex] = ret;
         return ret;
     }
 
