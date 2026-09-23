@@ -3,9 +3,11 @@ package playground.leetcode3;
 public class MinimumOperationstoReduceXtoZero {
 
     private int[] nums;
+    private Integer[][] memo;
 
     public int minOperations(int[] nums, int x) {
         this.nums = nums;
+        this.memo = new Integer[nums.length + 1][nums.length + 1];
         int bk = bk(x, 0, nums.length);
         if (bk > nums.length) {
             return -1;
@@ -20,6 +22,9 @@ public class MinimumOperationstoReduceXtoZero {
         if (x == 0) {
             return 0;
         }
+        if (memo[start][end] != null) {
+            return memo[start][end];
+        }
         int min = this.nums.length + 1;
         int current = x;
         for (int i = start; i < end; i++) {
@@ -31,6 +36,7 @@ public class MinimumOperationstoReduceXtoZero {
             current -= nums[i];
             min = Math.min(min, (end - i) + bk(current, start, i));
         }
+        memo[start][end] = min;
         return min;
     }
 
