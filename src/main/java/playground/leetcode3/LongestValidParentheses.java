@@ -2,46 +2,39 @@ package playground.leetcode3;
 
 public class LongestValidParentheses {
 
-    public int longestValidParentheses(String s) {
-        int res = 0;
-        int open = 0;
-        int closed = 0;
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            if (c == '(') {
-                open++;
-            } else {
-                closed++;
-            }
-            if (open == closed) {
-                res = Math.max(res, open * 2);
-            } else {
-                if (closed > open) {
-                    open = 0;
-                    closed = 0;
-                }
-            }
+    private Boolean[][] memo;
+
+    public boolean checkValidString(String s) {
+        int n = s.length();
+        memo = new Boolean[n + 1][n + 1];
+        return parse(s, 0, 0);
+    }
+
+    private boolean parse(String s, int i, int open) {
+        if (open < 0) {
+            return false;
         }
-         open = 0;
-         closed = 0;
-        for (int i = s.length() - 1; i >= 0; i--) {
-            char c = s.charAt(i);
-            if (c == '(') {
-                open++;
-            } else {
-                closed++;
-            }
-            if (open == closed) {
-                res = Math.max(res, open * 2);
-            } else {
-                if (open > closed) {
-                    open = 0;
-                    closed = 0;
-                }
-            }
+        if (i == s.length()) {
+            return open == 0;
+        }
+        if (memo[i][open] != null) {
+            return memo[i][open];
         }
 
-        return res;
+        boolean result;
+        char c = s.charAt(i);
+        if (c == '(') {
+            result = parse(s, i + 1, open + 1);
+        } else if (c == ')') {
+            result = parse(s, i + 1, open - 1);
+        } else {
+            result = parse(s, i + 1, open + 1)
+                    || parse(s, i + 1, open - 1)
+                    || parse(s, i + 1, open);
+        }
+
+        memo[i][open] = result;
+        return result;
     }
 
 }
