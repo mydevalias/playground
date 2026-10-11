@@ -6,7 +6,7 @@ public class MinimumSumofSquaredDifference {
         int max = Integer.MIN_VALUE;
         int diffs[] = new int[nums1.length];
         for (int i = 0; i < nums1.length; i++) {
-            int diff = Math.abs(nums1[i] - nums2[1]);
+            int diff = Math.abs(nums1[i] - nums2[i]);
             max = Math.max(max, diff);
             diffs[i] = diff;
         }
@@ -17,9 +17,9 @@ public class MinimumSumofSquaredDifference {
         }
 
         int k = k1 + k2;
-        for (int i = groups.length - 1; i >= 1; i++) {
+        for (int i = groups.length - 1; i >= 1; i--) {
 
-            int use = Math.min(k, i);
+            int use = Math.min(k, groups[i]);
             k = k - use;
             groups[i] = groups[i] - use;
             groups[i - 1] = groups[i - 1] + use;
@@ -29,7 +29,7 @@ public class MinimumSumofSquaredDifference {
         }
 
         long res = 0;
-        for (int i = groups.length - 1; i >= 1; i++) {
+        for (int i = groups.length - 1; i >= 1; i--) {
             res += (long) i * (long) i * groups[i];
         }
         return res;
