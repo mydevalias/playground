@@ -19,7 +19,7 @@ public class NumberofClosedIslands {
                     if (grid[i][j] == 1) {
                         visited[i][j] = -1;
                     } else {
-                        int id = (i + 1) * (j + 1);
+                        int id = i * grid[0].length + j;
                         checked.add(id);
                         dfs(i, j, id);
                     }
@@ -27,12 +27,13 @@ public class NumberofClosedIslands {
             }
         }
 
-        return checked.size() -invalid.size();
+        return checked.size() - invalid.size();
     }
 
     private void dfs(int i, int j, int id) {
-        if (i < 0 || j < 0 || i == grid.length || j == grid.length) {
+        if (i < 0 || j < 0 || i == grid.length || j == grid[0].length) {
             invalid.add(id);
+            return;
         }
         if (grid[i][j] == 1) {
             return;
@@ -40,11 +41,11 @@ public class NumberofClosedIslands {
         if (visited[i][j] != 0) {
             return;
         }
+        visited[i][j] = 1;
         dfs(i - 1, j, id);
         dfs(i + 1, j, id);
         dfs(i, j + 1, id);
         dfs(i, j - 1, id);
-
     }
 
 }
