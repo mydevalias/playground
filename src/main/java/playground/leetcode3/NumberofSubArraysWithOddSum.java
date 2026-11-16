@@ -15,7 +15,7 @@ public class NumberofSubArraysWithOddSum {
         }
         int ret = 0;
         for (int i = 0; i < arr.length; i++) {
-            ret = ret + bk(i, true);
+            ret = (ret + bk(i, true)) % 1_000_000_007;
         }
         return ret;
     }
@@ -44,5 +44,4 @@ public class NumberofSubArraysWithOddSum {
         }
         return memo[pos][col];
     }
-
 }
